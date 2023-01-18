@@ -18,7 +18,9 @@
 
 ### Global Search
 - Linear search (線形探索)
-- Bicubic search (二分探索)
+- Binary search (二分探索)
+- Breadth first search (幅優先探索)
+- Depth first search (深さ優先探索)
 - Branch-and-bound method (分枝限定法)
 - Dynamic programming (動的計画法)
 
