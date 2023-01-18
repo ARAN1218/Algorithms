@@ -3,7 +3,11 @@
 
 ## References
 ### Selection sort(選択ソート)
+dataの最小値を線形探索し、それを左に埋めてくことでソートするアルゴリズム
+
 ### Insertion sort(挿入ソート)
+左から順にデータを適切な位置に交換していくアルゴリズム
+
 ### Bubble sort(バブルソート)
 ### Shaker sort(シェーカーソート)
 ### Quick sort(クイックソート)
