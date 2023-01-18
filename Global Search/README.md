@@ -3,8 +3,10 @@
 
 ## References
 ### Linear search(線形探索)
+dataの左から一つずつtargetと照合し、同じ要素であればその位置を返すアルゴリズム
 
-### Bicubic search(二分探索)
+### Binary search(二分探索)
+予めソートしたdataを二分割していき、targetがその中点より大きければ右、小さければ左を探索していくアルゴリズム
 
 ### Branch-and-bound method(分枝限定法)
 
