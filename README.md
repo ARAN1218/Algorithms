@@ -26,7 +26,7 @@
 
 
 ### Local Search
-- Greedy method (貪欲法)
+- Greedy search (貪欲探索)
 - Multi-start local search (多開始局所探索)
 - Simulated annealing (シミュレーテッドアニーリング(焼きなまし法))
 - Tabu search (タブーサーチ)
