@@ -1,49 +1,46 @@
-def multi_start_local_search(data, max_weight, start_point=3):
+def multi_start_local_search(data, start_point=3):
+    # TSPの解のクラス
+    class Solution:
+        def __init__(self, solution):
+            self.solution = solution
+            self.dist = sum([data[solution[s]][solution[s+1]] for s in range(len(solution)-1)]) + data[solution[0]][solution[-1]]
+
+        def copy(self):
+            return Solution(self.solution)
+    
     # 近傍解を求める
     def getNeighbors(solution):
         neighbors = []
         for i in range(len(solution)):
+            for j in range(i, len(solution)):
                 neighbor = solution.copy()
-                neighbor[i] = 1 if neighbor[i]==0 else 0
+                neighbor[i], neighbor[j] = neighbor[j], neighbor[i]
+                neighbor = Solution(neighbor)
                 neighbors.append(neighbor)
         return neighbors
     
     
-    finalbestSolution, finalbestValue = 0, 0
+    finalbestSolution = Solution([i for i in range(len(data))])
     for cnt in range(start_point):
         random.seed(cnt)
-        bestSolution = [random.randint(0,1) for i in range(len(data))]
-        bestValue = 0
-        print(f"探索初期解：{bestSolution}")
+        bestSolution = [i for i in range(len(data))]
+        random.shuffle(bestSolution)
+        bestSolution = Solution(bestSolution)
+        print(f"探索初期解：{bestSolution.solution}")
         while True:
             update = False
-            currentNeighbors = getNeighbors(bestSolution)
+            currentNeighbors = getNeighbors(bestSolution.solution)
             for neighbor in currentNeighbors:
-                neighborWeight = sum([item[0] for i,item in enumerate(data) if neighbor[i] == 1])
-                neighborValue = sum([item[1] for i,item in enumerate(data) if neighbor[i] == 1])
-                if neighborWeight <= max_weight and bestValue < neighborValue:
-                    bestSolution = neighbor.copy()
-                    bestValue = neighborValue
+                if bestSolution.dist > neighbor.dist:
+                    bestSolution = neighbor
                     update = True
 
             if not update: break
     
-        print(f"探索解：{bestSolution}, 探索価値：{bestValue}")
-        if finalbestValue < bestValue:
-            finalbestSolution = bestSolution.copy()
-            finalbestValue = bestValue
+        print(f"探索解：{bestSolution.solution}, 探索価値：{bestSolution.dist}")
+        if finalbestSolution.dist > bestSolution.dist:
+            finalbestSolution = bestSolution
             
     print()
-    print(f"探索最適解：{finalbestSolution}, 探索最大価値：{finalbestValue}")
-    return finalbestSolution, finalbestValue
-
-  
-# テスト
-import random
-# 品物i：(重さw, 価値v)
-data = [(10,10), (20,20), (30,30), (40,10)]
-#data = [(10,10), (20,20), (30,30), (40,100)]
-max_weight = 50
-
-print(data)
-multi_start_local_search(data, max_weight, start_point=3)
+    print(f"探索最適解：{finalbestSolution.solution}, 探索最大価値：{finalbestSolution.dist}")
+    return finalbestSolution.solution, finalbestSolution.dist
