@@ -1,35 +1,32 @@
-def greedy_search(data, max_weight, currentSolution=[]):
+def greedy_search(data, currentSolution=[]):
+    # TSPの解のクラス
+    class Solution:
+        def __init__(self, solution):
+            self.solution = solution
+            self.dist = sum([data[solution[s]][solution[s+1]] for s in range(len(solution)-1)]) + data[solution[0]][solution[-1]]
+
+        def copy(self):
+            return Solution(self.solution)
+
     # 近傍解を求める
     def getNeighbors(solution):
         neighbors = []
         for i in range(len(solution)):
+            for j in range(i, len(solution)):
                 neighbor = solution.copy()
-                neighbor[i] = 1 if neighbor[i]==0 else 0
+                neighbor[i], neighbor[j] = neighbor[j], neighbor[i]
+                neighbor = Solution(neighbor)
                 neighbors.append(neighbor)
         return neighbors
     
-    bestSolution = currentSolution if currentSolution else [0 for i in range(len(data))]
-    bestValue = 0
+    # 探索開始
+    bestSolution = Solution(currentSolution) if currentSolution else Solution([i for i in range(len(data))])
     while True:
         update = False
-        currentNeighbors = getNeighbors(bestSolution)
+        currentNeighbors = getNeighbors(bestSolution.solution)
         for neighbor in currentNeighbors:
-            neighborWeight = sum([item[0] for i,item in enumerate(data) if neighbor[i] == 1])
-            neighborValue = sum([item[1] for i,item in enumerate(data) if neighbor[i] == 1])
-            if neighborWeight <= max_weight and bestValue < neighborValue:
-                bestSolution = neighbor.copy()
-                bestValue = neighborValue
+            if bestSolution.dist > neighbor.dist:
+                bestSolution = neighbor
                 update = True
                 
-        if not update: return bestSolution,bestValue
-
-        
-# テスト
-import random
-# 品物i：(重さw, 価値v)
-data = [(10,10), (20,20), (30,30), (40,10)]
-#data = [(10,10), (20,20), (30,30), (40,100)]
-max_weight = 50
-
-print(data)
-greedy_search(data, max_weight, currentSolution=[0,0,0,0])
+        if not update: return bestSolution.solution, bestSolution.dist
